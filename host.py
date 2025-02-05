@@ -3,7 +3,7 @@ import socket
 import time
 
 # Configuration settings for the access point
-SSID = "PicoW_Network"  # Change to your desired network name
+SSID = "PicoW_Network1"  # Change to your desired network name
 PASSWORD = "12345678"  # Minimum 8 characters
 IP_ADDRESS = "192.168.4.1"  # Static IP for the AP
 
