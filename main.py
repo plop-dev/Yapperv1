@@ -35,6 +35,6 @@ stop_event = threading.Event()
 receiver_thread = start_receiver(sock, stop_event)
 
 send_message(
-    "[+] PICO [{}]: Connected.".format(PICO_ID).encode("utf-8"),
+    f"[+] PICO [{PICO_ID}]: Connected.".encode("utf-8"),
     (IP_ADDRESS, SOCKET_PORT),
 )
