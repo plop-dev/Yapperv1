@@ -33,6 +33,18 @@ def start_receiver(sock, stop_event):
     return receiver_thread
 
 
+def send_message(sock: socket.socket, message: str, address: tuple[str, int]):
+    """Encode and send a message to the given address with error handling."""
+    try:
+        data = message.encode("utf-8")
+        bytes_sent = sock.sendto(data, address)
+        if bytes_sent != len(data):
+            raise RuntimeError("Incomplete message sent.")
+        print("Sent:     {}".format(message))
+    except Exception as e:
+        print(f"An error occurred while sending the message: {e}")
+
+
 def main():
     sock = create_socket()
     stop_event = threading.Event()
@@ -47,7 +59,8 @@ def main():
                 break
 
             try:
-                sock.sendto(message.encode("utf-8"), (HOST, PORT))
+                # sock.sendto(message.encode("utf-8"), (HOST, PORT))
+                send_message(sock, message, (HOST, PORT))
                 print("Sent:     {}".format(message))
             except Exception as e:
                 print(f"An error occurred while sending: {e}")

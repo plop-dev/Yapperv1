@@ -3,7 +3,7 @@ import time
 import threading
 import sys
 from connect import connect_to_wifi
-from socket_client import create_socket, start_receiver
+from socket_client import create_socket, start_receiver, send_message
 
 PICO_ID = 4  # Pico order in daisy chain (4 -> 3 -> 2 -> 1)
 
@@ -34,7 +34,7 @@ sock = create_socket()
 stop_event = threading.Event()
 receiver_thread = start_receiver(sock, stop_event)
 
-sock.sendto(
+send_message(
     "[+] PICO [{}]: Connected.".format(PICO_ID).encode("utf-8"),
     (IP_ADDRESS, SOCKET_PORT),
 )
