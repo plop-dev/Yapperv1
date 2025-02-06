@@ -30,7 +30,7 @@ def create_access_point(
     print("Access point is now active.")
 
 
-def start_server(ip_address: str = IP_ADDRESS, yapper_id: int = 1) -> None:
+def start_host(ip_address: str = IP_ADDRESS, yapper_id: int = 1) -> None:
     # Create a socket and bind it to the AP's IP and port 80
     addr = socket.getaddrinfo(ip_address, 80)[0][-1]
     s = socket.socket()
@@ -66,6 +66,6 @@ Content-Type: text/html
 # Main script
 try:
     create_access_point()
-    start_server()
+    start_host()
 except KeyboardInterrupt:
     print("Program stopped.")

@@ -4,7 +4,7 @@ import threading
 import sys
 from connect import connect_to_wifi
 from client import create_socket, start_receiver, send_message
-from host import create_access_point, start_server
+from host import create_access_point, start_host
 from server import run_server
 
 YAPPER_ID = 4  # Pico order in daisy chain (4 -> 3 -> 2 -> 1)
@@ -48,9 +48,9 @@ if YAPPER_ID != 4:  # Create the AP for the previous Pico in the chain
     create_access_point(password=PASSWORD, ssid=SSID, ip_address=IP_ADDRESS)
 
     # Start the server for the next Pico in the chain
-    start_server(ip_address=IP_ADDRESS, yapper_id=YAPPER_ID)
+    start_host(ip_address=IP_ADDRESS, yapper_id=YAPPER_ID)
 
     server_thread = threading.Thread(
-        target=start_server, args=(IP_ADDRESS, YAPPER_ID), daemon=True
+        target=run_server, args=(IP_ADDRESS, YAPPER_ID), daemon=True
     )
     server_thread.start()
