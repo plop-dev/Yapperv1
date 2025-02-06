@@ -6,7 +6,7 @@ SSID = "szymon"
 PASSWORD = "steamdeck"
 
 
-def connect_to_wifi(ssid, password):
+def connect_to_wifi(ssid: str, password: str) -> bool:
     try:
         wlan = network.WLAN(network.STA_IF)
         wlan.active(True)

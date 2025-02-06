@@ -10,7 +10,7 @@ IP_ADDRESS = "192.168.4.1"  # Static IP for the AP
 
 def create_access_point(
     password: str = PASSWORD, ssid: str = SSID, ip_address: str = IP_ADDRESS
-):
+) -> None:
     # Create a network WLAN object in AP mode
     ap = network.WLAN(network.AP_IF)
     ap.active(True)
@@ -30,7 +30,7 @@ def create_access_point(
     print("Access point is now active.")
 
 
-def start_server(ip_address: str = IP_ADDRESS, yapper_id: int = 1):
+def start_server(ip_address: str = IP_ADDRESS, yapper_id: int = 1) -> None:
     # Create a socket and bind it to the AP's IP and port 80
     addr = socket.getaddrinfo(ip_address, 80)[0][-1]
     s = socket.socket()
@@ -46,7 +46,7 @@ def start_server(ip_address: str = IP_ADDRESS, yapper_id: int = 1):
             print("Request:", request)
 
             # Simple response (basic HTML page)
-            response = f"""\
+            response = f"""\ 
 HTTP/1.1 200 OK
 Content-Type: text/html
 
