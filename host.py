@@ -30,7 +30,7 @@ def create_access_point(
     print("Access point is now active.")
 
 
-def start_server(ip_address: str = IP_ADDRESS, pico_id: int = 1):
+def start_server(ip_address: str = IP_ADDRESS, yapper_id: int = 1):
     # Create a socket and bind it to the AP's IP and port 80
     addr = socket.getaddrinfo(ip_address, 80)[0][-1]
     s = socket.socket()
@@ -53,7 +53,7 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html>
 <head><title>Pico W Access Point</title></head>
-<body><h1>Welcome to Pico W!</h1><p>You are connected to the access point of PICO {pico_id}.</p></body>
+<body><h1>Welcome to Pico W!</h1><p>You are connected to the access point of PICO {yapper_id}.</p></body>
 </html>
 """
             cl.send(response)
