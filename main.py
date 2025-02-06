@@ -4,10 +4,11 @@ import threading
 import sys
 from connect import connect_to_wifi
 from socket_client import create_socket, start_receiver, send_message
+from host import create_access_point, start_server
 
 PICO_ID = 4  # Pico order in daisy chain (4 -> 3 -> 2 -> 1)
 
-SSID = "PicoW_Network1"  # Change to your desired network name
+SSID = f"PicoW_Network{PICO_ID}"  # Change to your desired network name
 PASSWORD = "12345678"  # Minimum 8 characters
 IP_ADDRESS = "192.168.1.0"  # Static IP for the AP (Access Point)
 SOCKET_PORT = 8240  # Port for the socket server (same for every Pico)
@@ -17,24 +18,33 @@ APS = [
     "PicoW_Network1",
 ]  # Access points of each pico wifi hotspot
 
-try:
-    for i in range(PICO_ID):
-        if connect_to_wifi(APS[i], PASSWORD):
-            print("[+] Connected to:", APS[i])
-            break
+if PICO_ID != 1:  # Connect to the next Pico in the chain
+    try:
+        for i in range(PICO_ID):
+            if connect_to_wifi(APS[i], PASSWORD):
+                print("[+] Connected to:", APS[i])
+                break
 
-except Exception as e:
-    print(f"Error: {e}")
-    sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
-# Connect to the Pico's Socket Server
-sock = create_socket()
+    # Connect to the Pico's Socket Server
+    sock = create_socket()
 
-# Start the receiver thread
-stop_event = threading.Event()
-receiver_thread = start_receiver(sock, stop_event)
+    # Start the receiver thread
+    stop_event = threading.Event()
+    receiver_thread = start_receiver(sock, stop_event)
 
-send_message(
-    f"[+] PICO [{PICO_ID}]: Connected.".encode("utf-8"),
-    (IP_ADDRESS, SOCKET_PORT),
-)
+    # Notify the server that the Pico is connected
+    send_message(
+        f"[+] PICO [{PICO_ID}]: Connected.".encode("utf-8"),
+        (IP_ADDRESS, SOCKET_PORT),
+    )
+
+if PICO_ID != 4:  # Create the AP for the previous Pico in the chain
+    # Create the AP for the next Pico in the chain
+    create_access_point(password=PASSWORD, ssid=SSID, ip_address=IP_ADDRESS)
+
+    # Start the server for the next Pico in the chain
+    start_server(ip_address=IP_ADDRESS, pico_id=PICO_ID)
