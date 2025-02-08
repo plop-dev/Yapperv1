@@ -50,6 +50,7 @@ if YAPPER_ID != 4:  # Create the AP for the previous Pico in the chain
     # Start the server for the next Pico in the chain
     start_host(ip_address=IP_ADDRESS, yapper_id=YAPPER_ID)
 
+    # Create socket server
     server_thread = threading.Thread(
         target=run_server, args=(IP_ADDRESS, YAPPER_ID), daemon=True
     )

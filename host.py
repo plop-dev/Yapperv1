@@ -52,8 +52,8 @@ Content-Type: text/html
 
 <!DOCTYPE html>
 <html>
-<head><title>Pico W Access Point</title></head>
-<body><h1>Welcome to Pico W!</h1><p>You are connected to the access point of PICO {yapper_id}.</p></body>
+<head><title>Yapper {yapper_id} Access Point</title></head>
+<body><h1>You are connected to the access point of YAPPER {yapper_id}.</h1></body>
 </html>
 """
             cl.send(response)
