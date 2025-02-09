@@ -6,6 +6,7 @@ from connect import connect_to_wifi
 from client import create_socket, start_receiver, send_message
 from host import create_access_point, start_host
 from server import run_server
+import microphone
 
 YAPPER_ID = 4  # Pico order in daisy chain (4 -> 3 -> 2 -> 1)
 
@@ -18,6 +19,27 @@ APS = [
     "PicoW_Network2",
     "PicoW_Network1",
 ]  # Access points of each pico wifi hotspot
+
+VOLUME_THRESHOLD = 5000  # adjust as needed
+SAMPLE_RATE = 2500  # Hz
+
+
+def monitor_audio():
+    adc = microphone.setup_adc(26)
+    while True:
+        sample = adc.read_u16() - 32768  # center around zero
+        if abs(sample) > VOLUME_THRESHOLD:
+            print("Loud sound detected, recording snippet...")
+            snippet = microphone.record_audio(adc, SAMPLE_RATE, record_time=0.1)
+            snippet_bytes = snippet.tobytes()
+            try:
+                send_message(snippet_bytes, (IP_ADDRESS, SOCKET_PORT))
+                print("Snippet sent.")
+            except Exception as e:
+                print("Error sending snippet:", e)
+            time.sleep(0.5)  # pause to avoid flooding
+        time.sleep(0.01)  # poll delay
+
 
 if YAPPER_ID != 1:  # Connect to the next Pico in the chain
     try:
@@ -55,3 +77,7 @@ if YAPPER_ID != 4:  # Create the AP for the previous Pico in the chain
         target=run_server, args=(IP_ADDRESS, YAPPER_ID), daemon=True
     )
     server_thread.start()
+
+# Start background thread for monitoring audio volume and sending snippet
+audio_thread = threading.Thread(target=monitor_audio, daemon=True)
+audio_thread.start()
